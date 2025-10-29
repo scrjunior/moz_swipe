@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { supabase } from "@/supabaseClient";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
+import { User } from "@supabase/supabase-js";
 
 // Toast notification component
 interface ToastProps {
@@ -48,10 +49,25 @@ interface ToastNotification {
   type: 'success' | 'error' | 'info';
 }
 
+interface SubscriptionData {
+  plan: string;
+  start: string;
+  end: string;
+  method: string;
+  frequency: string;
+  status: string;
+  lastPayment: {
+    date: string;
+    installments: string;
+    method: string;
+    amount: string;
+  };
+}
+
 export default function ConfiguracoesPage() {
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<{ name?: string; email?: string; phone?: string } | null>(null);
-  const [subscription, setSubscription] = useState<any>(null);
+  const [subscription, setSubscription] = useState<SubscriptionData | null>(null);
   const [loading, setLoading] = useState(true);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [activeTab, setActiveTab] = useState<"perfil" | "conta" | "senha">("perfil");
@@ -239,7 +255,7 @@ export default function ConfiguracoesPage() {
     try {
       // Verify current password by attempting to sign in
       const { error: signInError } = await supabase.auth.signInWithPassword({
-        email: user.email,
+        email: user!.email!,
         password: currentPassword,
       });
 

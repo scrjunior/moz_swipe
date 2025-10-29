@@ -121,7 +121,7 @@ const EMAILJS_TEMPLATE_ID = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID || 'temp
 const EMAILJS_PUBLIC_KEY = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || '43BQC37BapqHvCwx-';
 
 /** Utility: parse ISO timestamp to JS Date (or null) */
-function parseDateField(field: any): Date | null {
+function parseDateField(field: string | null | undefined): Date | null {
   if (!field) return null;
   return new Date(field);
 }
@@ -715,7 +715,7 @@ export default function UsuariosPage() {
 
         {users.length === 0 && (
           <div className="text-center py-8 text-gray-400">
-            Nenhum usuário encontrado. Clique em "Criar Usuário" para começar.
+            Nenhum usuário encontrado. Clique em &quot;Criar Usuário&quot; para começar.
           </div>
         )}
       </div>
