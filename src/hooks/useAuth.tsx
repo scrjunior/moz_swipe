@@ -1,5 +1,5 @@
 // src/hooks/useAuth.tsx
-"use client";
+/*"use client";
 
 import { useState, useEffect, useContext, createContext, ReactNode } from "react";
 import { User, onAuthStateChanged, signOut, signInWithEmailAndPassword } from "firebase/auth";
@@ -42,4 +42,4 @@ export function useAuth() {
   const ctx = useContext(AuthContext);
   if (!ctx) throw new Error("useAuth must be used inside AuthProvider");
   return ctx;
-}
+}*/
