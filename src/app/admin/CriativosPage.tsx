@@ -107,6 +107,24 @@ interface ToastNotification {
   type: 'success' | 'error' | 'info';
 }
 
+interface NewCriativoData {
+  title: string;
+  drive_link: string;
+  nicho: string | null;
+  trafego: string | null;
+  idioma: string | null;
+  oferta_id?: string;
+}
+
+interface UpdateCriativoData {
+  title: string;
+  drive_link: string;
+  oferta_id: string | null;
+  nicho: string | null;
+  trafego: string | null;
+  idioma: string | null;
+}
+
 // Opções predefinidas
 const IDIOMA_OPTIONS = [
   "Português",
@@ -150,15 +168,6 @@ export default function CriativosPage() {
   const [toasts, setToasts] = useState<ToastNotification[]>([]);
   const [confirmModal, setConfirmModal] = useState<{ show: boolean; message: string; onConfirm: () => void } | null>(null);
 
-  const colorClasses = [
-    "bg-blue-600/20 text-blue-200",
-    "bg-green-600/20 text-green-200",
-    "bg-red-600/20 text-red-200",
-    "bg-purple-600/20 text-purple-200",
-    "bg-yellow-600/20 text-yellow-200",
-    "bg-pink-600/20 text-pink-200",
-  ];
-
   // Toast notification functions
   const showToast = (message: string, type: 'success' | 'error' | 'info') => {
     const id = Date.now();
@@ -186,15 +195,6 @@ export default function CriativosPage() {
   const cancelConfirm = () => {
     setConfirmModal(null);
   };
-
-  function hashString(str: string) {
-    if (!str) return 0;
-    let hash = 0;
-    for (let i = 0; i < str.length; i++) {
-      hash = str.charCodeAt(i) + ((hash << 5) - hash);
-    }
-    return Math.abs(hash);
-  }
 
   const getOptimizedImageUrl = (
     originalUrl: string,
@@ -240,22 +240,6 @@ export default function CriativosPage() {
     return `https://drive.google.com/thumbnail?id=${fileId}&sz=w1000`;
   };
 
-  // Função para obter a thumbnail do criativo (prioritiza Drive, depois oferta)
-  const getCriativoThumbnail = (criativo: Criativo): string => {
-    // Sempre usa o link do Drive se disponível
-    if (criativo.drive_link) {
-      return getDrivePreview(criativo.drive_link);
-    }
-    
-    // Fallback para thumbnail da oferta
-    if (criativo.oferta?.thumbnail) {
-      return getOptimizedImageUrl(criativo.oferta.thumbnail);
-    }
-    
-    // Fallback padrão
-    return "/default-creative.jpg";
-  };
-
   useEffect(() => {
     const fetchData = async () => {
       const { data: ofertasData } = await supabase
@@ -298,7 +282,7 @@ export default function CriativosPage() {
     }
 
     try {
-      const newCriativo: any = {
+      const newCriativo: NewCriativoData = {
         title: criativoTitle.trim(),
         drive_link: driveLink.trim(),
         nicho: nicho || null,
@@ -390,7 +374,7 @@ export default function CriativosPage() {
     }
 
     try {
-      const updateData: any = {
+      const updateData: UpdateCriativoData = {
         title: editingTitle.trim(),
         drive_link: editingDriveLink.trim(),
         oferta_id: editingOferta || null,
@@ -624,7 +608,7 @@ export default function CriativosPage() {
 
           <select
             value={filterType}
-            onChange={(e) => setFilterType(e.target.value as any)}
+            onChange={(e) => setFilterType(e.target.value as "all" | "with-offer" | "without-offer")}
             className="p-2 bg-[#1f1f1f] rounded-lg text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <option value="all">Todos os criativos</option>
@@ -682,26 +666,28 @@ export default function CriativosPage() {
               <div className="relative">
                 {criativo.drive_link ? (
                   <div className="w-full h-40 bg-gray-900 flex items-center justify-center overflow-hidden">
-                    <img
-                      src={getDrivePreview(criativo.drive_link)}
-                      alt={criativo.title}
-                      className="w-full h-full object-cover"
-                      loading="lazy"
-                      onError={(e) => {
-                        // Fallback: tenta usar a thumbnail da oferta ou imagem padrão
-                        const target = e.target as HTMLImageElement;
-                        if (criativo.oferta?.thumbnail) {
-                          target.src = getOptimizedImageUrl(criativo.oferta.thumbnail);
-                        } else {
-                          target.src = "/default-creative.jpg";
-                        }
-                      }}
-                    />
+                     {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={getDrivePreview(criativo.drive_link)}
+                        alt={criativo.title}
+                        className="w-full h-full object-cover"
+                        loading="lazy"
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement;
+                          if (criativo.oferta?.thumbnail) {
+                            target.src = getOptimizedImageUrl(criativo.oferta.thumbnail);
+                          } else {
+                            target.src = "/default-creative.jpg";
+                          }
+                        }}
+                      />
                   </div>
                 ) : (
-                  <img
+                  <Image
                     src={criativo.oferta?.thumbnail ? getOptimizedImageUrl(criativo.oferta.thumbnail) : "/default-creative.jpg"}
                     alt={criativo.title}
+                    width={400}
+                    height={160}
                     className="w-full h-40 object-cover"
                     loading="lazy"
                   />
