@@ -625,6 +625,17 @@ export default function AdminPage() {
             {!sidebarCollapsed && <span>Criativos</span>}
           </button>
 
+            <button
+            onClick={() => setActivePage("landing-pages")}
+            className={`px-3 py-2 rounded-lg text-left flex items-center gap-3 ${
+              activePage === "landing-pages" ? "bg-blue-600" : "hover:bg-[#1f1f1f]"
+            }`}
+            title={sidebarCollapsed ? "Páginas" : ""}
+          >
+            <span>📄</span>
+            {!sidebarCollapsed && <span>Páginas</span>}
+          </button>
+
           <button
             onClick={() => setActivePage("usuarios")}
             className={`px-3 py-2 rounded-lg text-left flex items-center gap-3 ${
@@ -635,6 +646,8 @@ export default function AdminPage() {
             <span>👤</span>
             {!sidebarCollapsed && <span>Usuários</span>}
           </button>
+
+            
 
           <button
             onClick={() => setActivePage("dashboard")}
@@ -647,16 +660,7 @@ export default function AdminPage() {
             {!sidebarCollapsed && <span>Dashboard</span>}
           </button>
 
-          <button
-            onClick={() => setActivePage("landing-pages")}
-            className={`px-3 py-2 rounded-lg text-left flex items-center gap-3 ${
-              activePage === "dashboard" ? "bg-blue-600" : "hover:bg-[#1f1f1f]"
-            }`}
-            title={sidebarCollapsed ? "Páginas" : ""}
-          >
-            <span>📄</span>
-            {!sidebarCollapsed && <span>Páginas</span>}
-          </button>
+          
         </nav>
       </aside>
 
@@ -983,7 +987,6 @@ export default function AdminPage() {
         )}
 
         {activePage === "usuarios" && <UsuariosPage />}
-        {activePage === "criativos" && <CriativosPage />}
         {activePage === "criativos" && <CriativosPage />}
         {activePage === "dashboard" && <DashboardPage/>}
         {activePage === "landing-pages" && <LandingPagesPage />}
