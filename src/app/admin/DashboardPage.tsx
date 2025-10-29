@@ -37,7 +37,7 @@ interface LoginRecord {
     email: string;
     expires_at: string | null;
     paused: boolean;
-  } | null;
+  } | null; // ✅ Objeto único, não array
 }
 
 interface AccessRecord {
