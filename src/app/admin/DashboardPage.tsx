@@ -42,7 +42,7 @@ interface LoginRecord {
     email: string;
     expires_at: string | null;
     paused: boolean;
-  }[] | null; // ✅ Aceita objeto único OU array
+  }[] | null;
 }
 
 interface AccessRecord {
@@ -52,7 +52,11 @@ interface AccessRecord {
     title: string;
     thumbnail: string;
     categories: string[];
-  } | null;
+  } | {
+    title: string;
+    thumbnail: string;
+    categories: string[];
+  }[] | null; // ✅ Aceita objeto único OU array
 }
 
 export default function DashboardPage() {
@@ -126,7 +130,7 @@ export default function DashboardPage() {
         
         (logins as LoginRecord[]).forEach((login) => {
           if (!userLoginMap.has(login.user_id)) {
-            // ✅ Suporta tanto objeto único quanto array
+            // Suporta tanto objeto único quanto array
             const userData = Array.isArray(login.users) ? login.users[0] : login.users;
             
             userLoginMap.set(login.user_id, {
@@ -161,6 +165,9 @@ export default function DashboardPage() {
         const contentMap = new Map<string, ContentAccessData>();
 
         (accessData as AccessRecord[]).forEach((access) => {
+          // ✅ Suporta tanto objeto único quanto array
+          const contentData = Array.isArray(access.contents) ? access.contents[0] : access.contents;
+          
           const existing = contentMap.get(access.content_id);
           
           if (existing) {
@@ -171,11 +178,11 @@ export default function DashboardPage() {
           } else {
             contentMap.set(access.content_id, {
               content_id: access.content_id,
-              title: access.contents?.title || "N/A",
-              thumbnail: access.contents?.thumbnail || "",
+              title: contentData?.title || "N/A",
+              thumbnail: contentData?.thumbnail || "",
               access_count: 1,
               last_accessed: access.accessed_at,
-              categories: access.contents?.categories || [],
+              categories: contentData?.categories || [],
             });
           }
         });
