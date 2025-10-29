@@ -469,25 +469,25 @@ export default function AdminPage() {
     }
   };
 
-  // Valores únicos para filtros
+  // Valores únicos para filtros - com type guard apropriado
   const uniqueTipos = Array.from(
-    new Set(contents.map((c) => c.tipo).filter(Boolean))
+    new Set(contents.map((c) => c.tipo).filter((v): v is string => Boolean(v)))
   );
   
   const uniqueIdiomas = Array.from(
-    new Set(contents.map((c) => c.idioma).filter(Boolean))
+    new Set(contents.map((c) => c.idioma).filter((v): v is string => Boolean(v)))
   );
   
   const uniqueNichos = Array.from(
-    new Set(contents.map((c) => c.nicho).filter(Boolean))
+    new Set(contents.map((c) => c.nicho).filter((v): v is string => Boolean(v)))
   );
   
   const uniqueTrafegos = Array.from(
-    new Set(contents.map((c) => c.trafego).filter(Boolean))
+    new Set(contents.map((c) => c.trafego).filter((v): v is string => Boolean(v)))
   );
 
   const uniqueEstruturas = Array.from(
-    new Set(contents.map((c) => c.estrutura).filter(Boolean))
+    new Set(contents.map((c) => c.estrutura).filter((v): v is string => Boolean(v)))
   );
 
   // Criar lista única misturada de todos os filtros
