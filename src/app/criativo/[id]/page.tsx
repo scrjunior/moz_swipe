@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { supabase } from "@/supabaseClient";
 import Image from "next/image";
+import { User } from "@supabase/supabase-js";
 
 interface Criativo {
   id: string;
@@ -31,7 +32,7 @@ export default function CriativoDetailPage() {
   const [relatedPages, setRelatedPages] = useState<LandingPage[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<{ name?: string; email?: string } | null>(null);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [downloadProgress, setDownloadProgress] = useState<number | null>(null);

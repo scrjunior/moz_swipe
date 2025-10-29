@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { supabase } from "@/supabaseClient";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
+import { User } from "@supabase/supabase-js";
 
 interface Criativo {
   id: string;
@@ -31,7 +32,7 @@ export default function UserPage() {
   const [filterTrafego, setFilterTrafego] = useState<string | null>(null);
   const [filterIdioma, setFilterIdioma] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<{ name?: string; email?: string; userId?: string } | null>(null);
   const [subscriptionStatus, setSubscriptionStatus] = useState<{
     isActive: boolean;
