@@ -1,7 +1,7 @@
 "use client";
 
 import { supabase } from "@/supabaseClient";
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react"; // ← Adicionar Suspense
 import { useRouter, useSearchParams } from "next/navigation";
 import type { User } from "@supabase/supabase-js";
 
@@ -47,7 +47,8 @@ interface ToastNotification {
   type: 'success' | 'error' | 'info';
 }
 
-export default function LoginPage() {
+// ✅ Componente separado que usa searchParams
+function LoginContent() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [email, setEmail] = useState("");
@@ -60,7 +61,7 @@ export default function LoginPage() {
   const [setupUserName, setSetupUserName] = useState("");
   const [toasts, setToasts] = useState<ToastNotification[]>([]);
   const router = useRouter();
-  const searchParams = useSearchParams();
+  const searchParams = useSearchParams(); // ✅ Agora dentro do Suspense
 
   // Toast notification functions
   const showToast = (message: string, type: 'success' | 'error' | 'info') => {
@@ -84,7 +85,7 @@ export default function LoginPage() {
       // Normal auth flow
       initializeAuth();
     }
-  }, [searchParams]); // Removido router da dependência
+  }, [searchParams]);
 
   const validateSetupToken = async (token: string, userEmail: string) => {
     try {
@@ -590,5 +591,19 @@ export default function LoginPage() {
         }
       `}</style>
     </div>
+  );
+}
+
+// ✅ Componente principal com Suspense
+export default function LoginPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex flex-col items-center justify-center bg-[#0f0f0f] text-white">
+        <div className="animate-spin rounded-full h-8 w-8 border-2 border-white border-t-transparent mb-4"></div>
+        <p>Carregando...</p>
+      </div>
+    }>
+      <LoginContent />
+    </Suspense>
   );
 }
