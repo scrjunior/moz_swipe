@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { supabase } from "@/supabaseClient";
-import Image from "next/image";
 
 // Toast notification component
 interface ToastProps {
@@ -102,6 +101,22 @@ interface ToastNotification {
   id: number;
   message: string;
   type: 'success' | 'error' | 'info';
+}
+
+interface NewLandingPageData {
+  title: string;
+  page_url: string;
+  association_type: 'oferta' | 'criativo';
+  oferta_id: string | null;
+  criativo_id: string | null;
+}
+
+interface UpdateLandingPageData {
+  title: string;
+  page_url: string;
+  association_type: 'oferta' | 'criativo';
+  oferta_id: string | null;
+  criativo_id: string | null;
 }
 
 export default function LandingPagesPage() {
@@ -218,7 +233,7 @@ export default function LandingPagesPage() {
     }
 
     try {
-      const newLandingPage: any = {
+      const newLandingPage: NewLandingPageData = {
         title: title.trim(),
         page_url: pageUrl.trim(),
         association_type: associationType,
@@ -294,7 +309,7 @@ export default function LandingPagesPage() {
     }
 
     try {
-      const updateData: any = {
+      const updateData: UpdateLandingPageData = {
         title: editingTitle.trim(),
         page_url: editingPageUrl.trim(),
         association_type: editingAssociationType,
@@ -498,7 +513,7 @@ export default function LandingPagesPage() {
 
           <select
             value={filterType}
-            onChange={(e) => setFilterType(e.target.value as any)}
+            onChange={(e) => setFilterType(e.target.value as "all" | "oferta" | "criativo")}
             className="p-2 bg-[#1f1f1f] rounded-lg text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <option value="all">Todas as páginas</option>
