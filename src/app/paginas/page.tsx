@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { supabase } from "@/supabaseClient";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
+import { User } from "@supabase/supabase-js";
 
 interface LandingPage {
   id: string;
@@ -26,7 +27,7 @@ export default function LandingPagesUserPage() {
   const [pages, setPages] = useState<LandingPage[]>([]);
   const [filterType, setFilterType] = useState<'all' | 'oferta' | 'criativo'>('all');
   const [loading, setLoading] = useState(true);
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<{ name?: string; email?: string; userId?: string } | null>(null);
   const [subscriptionStatus, setSubscriptionStatus] = useState<{
     isActive: boolean;
@@ -447,9 +448,9 @@ export default function LandingPagesUserPage() {
                       <button
                         key={type.value}
                         onClick={() => {
-                          setFilterType(type.value as any);
-                          setFiltersOpen(false);
-                        }}
+  setFilterType(type.value as 'all' | 'oferta' | 'criativo');
+  setFiltersOpen(false);
+}}
                         className={`block w-full text-left px-3 py-2 rounded ${
                           filterType === type.value
                             ? "bg-blue-600 text-white"
