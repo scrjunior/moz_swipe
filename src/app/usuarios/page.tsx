@@ -275,32 +275,32 @@ export default function UserPage() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Valores únicos para filtros
-  const uniqueTipos = Array.from(
-    new Set(contents.map((c) => c.tipo).filter(Boolean))
-  );
-  
-  const uniqueIdiomas = Array.from(
-    new Set(contents.map((c) => c.idioma).filter(Boolean))
-  );
-  
-  const uniqueNichos = Array.from(
-    new Set(contents.map((c) => c.nicho).filter(Boolean))
-  );
-  
-  const uniqueTrafegos = Array.from(
-    new Set(contents.map((c) => c.trafego).filter(Boolean))
-  );
+  // Valores únicos para filtros - com type guard apropriado
+const uniqueTipos = Array.from(
+  new Set(contents.map((c) => c.tipo).filter((v): v is string => Boolean(v)))
+);
 
-  const uniqueEstruturas = Array.from(
-    new Set(contents.map((c) => c.estrutura).filter(Boolean))
-  );
+const uniqueIdiomas = Array.from(
+  new Set(contents.map((c) => c.idioma).filter((v): v is string => Boolean(v)))
+);
 
-  // Criar lista única misturada de todos os filtros
-  interface FilterItem {
-    value: string;
-    type: 'tipo' | 'idioma' | 'nicho' | 'trafego' | 'estrutura';
-  }
+const uniqueNichos = Array.from(
+  new Set(contents.map((c) => c.nicho).filter((v): v is string => Boolean(v)))
+);
+
+const uniqueTrafegos = Array.from(
+  new Set(contents.map((c) => c.trafego).filter((v): v is string => Boolean(v)))
+);
+
+const uniqueEstruturas = Array.from(
+  new Set(contents.map((c) => c.estrutura).filter((v): v is string => Boolean(v)))
+);
+
+// Criar lista única misturada de todos os filtros
+interface FilterItem {
+  value: string;
+  type: 'tipo' | 'idioma' | 'nicho' | 'trafego' | 'estrutura';
+}
 
   const allFilters: FilterItem[] = [
     ...uniqueTipos.map(v => ({ value: v, type: 'tipo' as const })),

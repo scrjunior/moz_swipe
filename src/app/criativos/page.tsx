@@ -288,24 +288,24 @@ export default function UserPage() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Valores únicos para filtros
-  const uniqueNichos = Array.from(
-    new Set(criativos.map((c) => c.nicho).filter(Boolean))
-  );
-  
-  const uniqueTrafegos = Array.from(
-    new Set(criativos.map((c) => c.trafego).filter(Boolean))
-  );
+  // Valores únicos para filtros - com type guard apropriado
+const uniqueNichos = Array.from(
+  new Set(criativos.map((c) => c.nicho).filter((v): v is string => Boolean(v)))
+);
 
-  const uniqueIdiomas = Array.from(
-    new Set(criativos.map((c) => c.idioma).filter(Boolean))
-  );
+const uniqueTrafegos = Array.from(
+  new Set(criativos.map((c) => c.trafego).filter((v): v is string => Boolean(v)))
+);
 
-  // Criar lista única misturada de todos os filtros
-  interface FilterItem {
-    value: string;
-    type: 'nicho' | 'trafego' | 'idioma';
-  }
+const uniqueIdiomas = Array.from(
+  new Set(criativos.map((c) => c.idioma).filter((v): v is string => Boolean(v)))
+);
+
+// Criar lista única misturada de todos os filtros
+interface FilterItem {
+  value: string;
+  type: 'nicho' | 'trafego' | 'idioma';
+}
 
   const allFilters: FilterItem[] = [
     ...uniqueNichos.map(v => ({ value: v, type: 'nicho' as const })),
