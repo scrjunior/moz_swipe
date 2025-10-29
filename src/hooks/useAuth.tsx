@@ -1,9 +1,10 @@
-// src/hooks/useAuth.tsx
-/*"use client";
+"use client";
 
-import { useState, useEffect, useContext, createContext, ReactNode } from "react";
-import { User, onAuthStateChanged, signOut, signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "@/lib/firebaseClient";
+import { useState, useContext, createContext, ReactNode } from "react";
+
+interface User {
+  email: string;
+}
 
 interface AuthContextType {
   user: User | null;
@@ -16,19 +17,14 @@ const AuthContext = createContext<AuthContextType | null>(null);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
-    });
-    return () => unsubscribe();
-  }, []);
-
   const login = async (email: string, password: string) => {
-    await signInWithEmailAndPassword(auth, email, password);
+    // Aqui poderás futuramente ligar a uma API real
+    // Por agora simula um login
+    setUser({ email });
   };
 
   const logout = async () => {
-    await signOut(auth);
+    setUser(null);
   };
 
   return (
@@ -42,4 +38,4 @@ export function useAuth() {
   const ctx = useContext(AuthContext);
   if (!ctx) throw new Error("useAuth must be used inside AuthProvider");
   return ctx;
-}*/
+}
