@@ -1,55 +1,52 @@
-// src/lib/auth.tsx
 'use client';
-import React, { createContext, useContext, useEffect, useState } from 'react';
-import { onAuthStateChanged, signInWithEmailAndPassword, signOut, User } from 'firebase/auth';
-import { auth } from './firebaseClient';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 
-
-interface AuthContextValue {
-user: User | null;
-loading: boolean;
-login: (email: string, password: string) => Promise<void>;
-logout: () => Promise<void>;
+// Define um tipo de usuário genérico
+interface User {
+  email: string;
 }
 
+interface AuthContextValue {
+  user: User | null;
+  loading: boolean;
+  login: (email: string, password: string) => Promise<void>;
+  logout: () => Promise<void>;
+}
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
-
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-const [user, setUser] = useState<User | null>(null);
-const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(false);
 
+  useEffect(() => {
+    // Se quiseres simular persistência de login:
+    const savedUser = localStorage.getItem('user');
+    if (savedUser) setUser(JSON.parse(savedUser));
+  }, []);
 
-useEffect(() => {
-const unsub = onAuthStateChanged(auth, (u) => {
-setUser(u);
-setLoading(false);
-});
-return () => unsub();
-}, []);
+  async function login(email: string, password: string) {
+    // Aqui podes ligar a uma API real no futuro.
+    setLoading(true);
+    setUser({ email });
+    localStorage.setItem('user', JSON.stringify({ email }));
+    setLoading(false);
+  }
 
+  async function logout() {
+    setUser(null);
+    localStorage.removeItem('user');
+  }
 
-async function login(email: string, password: string) {
-await signInWithEmailAndPassword(auth, email, password);
+  return (
+    <AuthContext.Provider value={{ user, loading, login, logout }}>
+      {children}
+    </AuthContext.Provider>
+  );
 }
-
-
-async function logout() {
-await signOut(auth);
-}
-
-
-return (
-<AuthContext.Provider value={{ user, loading, login, logout }}>
-{children}
-</AuthContext.Provider>
-);
-}
-
 
 export function useAuth() {
-const ctx = useContext(AuthContext);
-if (!ctx) throw new Error('useAuth must be used inside AuthProvider');
-return ctx;
+  const ctx = useContext(AuthContext);
+  if (!ctx) throw new Error('useAuth must be used inside AuthProvider');
+  return ctx;
 }
