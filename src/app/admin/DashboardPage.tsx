@@ -37,7 +37,12 @@ interface LoginRecord {
     email: string;
     expires_at: string | null;
     paused: boolean;
-  } | null; // ✅ Objeto único, não array
+  } | {
+    name: string;
+    email: string;
+    expires_at: string | null;
+    paused: boolean;
+  }[] | null; // ✅ Aceita objeto único OU array
 }
 
 interface AccessRecord {
@@ -121,13 +126,16 @@ export default function DashboardPage() {
         
         (logins as LoginRecord[]).forEach((login) => {
           if (!userLoginMap.has(login.user_id)) {
+            // ✅ Suporta tanto objeto único quanto array
+            const userData = Array.isArray(login.users) ? login.users[0] : login.users;
+            
             userLoginMap.set(login.user_id, {
               user_id: login.user_id,
-              user_name: login.users?.name || "N/A",
-              user_email: login.users?.email || "N/A",
+              user_name: userData?.name || "N/A",
+              user_email: userData?.email || "N/A",
               last_login: login.logged_in_at,
-              expires_at: login.users?.expires_at || null,
-              paused: login.users?.paused || false,
+              expires_at: userData?.expires_at || null,
+              paused: userData?.paused || false,
             });
           }
         });
