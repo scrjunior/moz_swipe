@@ -28,6 +28,28 @@ interface ContentAccessData {
   categories: string[];
 }
 
+// Interfaces para dados do Supabase
+interface LoginRecord {
+  user_id: string;
+  logged_in_at: string;
+  users: {
+    name: string;
+    email: string;
+    expires_at: string | null;
+    paused: boolean;
+  } | null;
+}
+
+interface AccessRecord {
+  content_id: string;
+  accessed_at: string;
+  contents: {
+    title: string;
+    thumbnail: string;
+    categories: string[];
+  } | null;
+}
+
 export default function DashboardPage() {
   const [stats, setStats] = useState<DashboardStats>({
     totalUsers: 0,
@@ -97,7 +119,7 @@ export default function DashboardPage() {
         // Get unique users with their last login
         const userLoginMap = new Map<string, UserLoginData>();
         
-        logins.forEach((login: any) => {
+        (logins as LoginRecord[]).forEach((login) => {
           if (!userLoginMap.has(login.user_id)) {
             userLoginMap.set(login.user_id, {
               user_id: login.user_id,
@@ -130,7 +152,7 @@ export default function DashboardPage() {
         // Aggregate access data by content
         const contentMap = new Map<string, ContentAccessData>();
 
-        accessData.forEach((access: any) => {
+        (accessData as AccessRecord[]).forEach((access) => {
           const existing = contentMap.get(access.content_id);
           
           if (existing) {
@@ -317,6 +339,7 @@ export default function DashboardPage() {
                       className="flex items-center justify-between p-3 bg-[#1f1f1f] rounded-lg"
                     >
                       <div className="flex items-center gap-3 flex-1 min-w-0">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
                           src={content.thumbnail}
                           alt={content.title}
@@ -455,6 +478,7 @@ export default function DashboardPage() {
                   key={content.content_id}
                   className="bg-[#1f1f1f] p-4 rounded-lg hover:bg-[#252525] transition"
                 >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={content.thumbnail}
                     alt={content.title}
